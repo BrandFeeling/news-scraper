@@ -4,6 +4,10 @@ VIRTUAL_BIN := $(VIRTUAL_ENV)/bin
 PROJECT_NAME := news-scraper
 TEST_DIR := test
 
+## run - Execute the module
+run:
+	$(VIRTUAL_BIN)/python3 $(PROJECT_NAME)/news_scraper.py
+
 ## format - Runs all formatting tools against the project
 format: black mypy
 
