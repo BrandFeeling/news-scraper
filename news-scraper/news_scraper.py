@@ -1,39 +1,35 @@
 import requests
 from bs4 import BeautifulSoup
 from bs4 import Tag
-from typing import Iterator
-
-def get_article_links(links: Iterator[Tag]) -> Iterator[Tag]:
-    return list(
-        filter(
-            lambda x: x.get("href") is not None
-            and x["href"].startswith(url)
-            and x["href"].endswith(".ghtml"),
-            links,
-        )
-    )
 
 
-url = "https://g1.globo.com"
-r1 = requests.get(url)
-r1.status_code
-coverpage = r1.content
-soup1 = BeautifulSoup(coverpage, "html5lib")
-
-coverpage_links: Iterator[Tag] = soup1.find_all("a")
-
-valid_links: Iterator[Tag] = get_article_links(coverpage_links)
-
-number_of_articles = 10
+apiKey = <your APIKey>
+num_news = 10
 
 
-news_contents = []
-list_links = []
-list_titles = []
+class GoogleNewsArticle:
+    def __init__(self, json) -> None:
+        self.author = json["author"]
+        self.title = json["title"]
+        self.description = json["description"]
+        self.url = json["url"]
+        self.publishedAt = json["publishedAt"]
+        self.content = json["content"]
+
+
+def get_google_news_articles(keyword: str):
+    url = f"https://newsapi.org/v2/top-headlines?q={keyword}&apiKey={apiKey}&pageSize={num_news}&sortBy=popularity"
+    response = requests.get(url)
+    if response.status_code != 200:
+        raise ConnectionError("Error raised")
+    json_news = response.json()["articles"]
+    news = list(map(lambda x: GoogleNewsArticle(x), json_news))
+    print(news)
 
 
 def main():
     """The main entry point for this project"""
+    get_google_news_articles("Apple")
     print("Project set up correctly")
 
 
